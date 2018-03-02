@@ -3,6 +3,7 @@
 import de.bezier.guido.*;
 public final static int NUM_ROWS =20;
 public final static int NUM_COLS =20;
+public final static int NUM_BOMBS = 30;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> bombs= new ArrayList <MSButton>();
 
@@ -26,7 +27,7 @@ void setup ()
 }
 public void setBombs()
 {
-  while(bombs.size() < 20)
+  while(bombs.size() < NUM_BOMBS)
     {
         int r = (int)(Math.random() * NUM_ROWS);
         int c = (int)(Math.random() * NUM_COLS);
@@ -45,16 +46,24 @@ public void draw ()
 }
 public boolean isWon()
 {
-    //your code here
+  int count=0;
+    for(int col = 0; col<NUM_COLS;col++)
+    {
+      for(int row = 0; row < NUM_ROWS; row++)
+      if(buttons[col][row].clicked)
+      count++;
+    }
+    if(count == NUM_ROWS*NUM_COLS - NUM_BOMBS)
+    return true;
     return false;
 }
 public void displayLosingMessage()
 {
-    //your code here
+    //
 }
 public void displayWinningMessage()
 {
-    //your code here
+    text("YOU WIN!", 250,250);
 }
 
 public class MSButton
@@ -89,7 +98,35 @@ public class MSButton
     public void mousePressed () 
     {
         clicked = true;
-        //your code here
+        if(keyPressed)
+        {
+          marked = !marked;
+          if(!marked)
+            clicked = false;
+        }
+        else if(bombs.contains(this))
+        displayLosingMessage();
+        else if(countBombs(r,c)>0)
+          label = "" + countBombs(r,c);
+        else
+        {
+          if(isValid(r-1,c) && !buttons[r-1][c].clicked)
+              buttons[r-1][c].mousePressed();
+           if(isValid(r+1,c) && !buttons[r+1][c].clicked)
+              buttons[r+1][c].mousePressed();
+           if(isValid(r,c-1) && !buttons[r][c-1].clicked)
+              buttons[r][c-1].mousePressed();
+           if(isValid(r,c+1) && !buttons[r][c+1].clicked)
+              buttons[r][c+1].mousePressed();
+           if(isValid(r-1,c+1) && !buttons[r-1][c+1].clicked)
+              buttons[r-1][c+1].mousePressed();
+           if(isValid(r+1,c+1) && !buttons[r+1][c+1].clicked)
+              buttons[r+1][c+1].mousePressed();
+           if(isValid(r-1,c-1) && !buttons[r-1][c-1].clicked)
+              buttons[r-1][c-1].mousePressed();
+           if(isValid(r+1,c-1) && !buttons[r+1][c-1].clicked)
+              buttons[r+1][c-1].mousePressed();
+        }
     }
 
     public void draw () 
@@ -113,7 +150,7 @@ public class MSButton
     }
     public boolean isValid(int r, int c)
     {
-        if(r>0&&r<NUM_ROWS&&c>0&&c<NUM_COLS)
+        if(r>=0&&r<NUM_ROWS&&c>=0&&c<NUM_COLS)
         return true;
         return false;
     }
