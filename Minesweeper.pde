@@ -59,7 +59,8 @@ public boolean isWon()
 }
 public void displayLosingMessage()
 {
-    //
+  
+  text("YOU LOSE", 250,250);
 }
 public void displayWinningMessage()
 {
