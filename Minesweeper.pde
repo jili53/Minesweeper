@@ -59,12 +59,15 @@ public boolean isWon()
 }
 public void displayLosingMessage()
 {
-  
-  text("YOU LOSE", 250,250);
+  String gameOver = new String("GAME OVER!");
+  for(int i=0; i<gameOver.length(); i++)
+  buttons[9][i+5].setLabel(gameOver.substring(i,i+1));
 }
 public void displayWinningMessage()
 {
-    text("YOU WIN!", 250,250);
+  String win = new String("YOU WIN!");
+  for(int i =0; i<win.length(); i++)
+  buttons[9][i+7].setLabel(win.substring(i,i+1));
 }
 
 public class MSButton
@@ -106,7 +109,12 @@ public class MSButton
             clicked = false;
         }
         else if(bombs.contains(this))
-        displayLosingMessage();
+        {
+          for(int row = 0; row <NUM_ROWS; row++)
+            for(int col=0; col < NUM_COLS; col++)
+            buttons[row][col].clicked = true;
+          displayLosingMessage();
+        }
         else if(countBombs(r,c)>0)
           label = "" + countBombs(r,c);
         else
